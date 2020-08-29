@@ -7,15 +7,16 @@ typedef struct instrument
   int price;
 } instrument;
 
-struct shop {
-  char* name;
-  instrument* instruments[10];
+struct shop
+{
+  char *name;
+  instrument *instruments[10];
 };
 
 struct shop createShop();
-instrument* createIns();
-void printShop(struct shop* s);
-instrument addInstrument(struct shop* s);
+instrument *createIns();
+void printShop(struct shop *s);
+int addInstrument(struct shop *s);
 
 int main(void)
 {
@@ -23,65 +24,70 @@ int main(void)
   char command[20];
   struct shop *s;
   printf("Enter your first command!: ");
-  while (fgets(input, 20, stdin)) 
+  while (fgets(input, 20, stdin))
   {
     sscanf(input, "%s", command);
-    if(!strcmp(command, "createShop")){
+    if (!strcmp(command, "createShop"))
+    {
       struct shop res = createShop();
       s = &res;
       printf("Shop created: %s\n", s->name);
       printf("Command: ");
       continue;
-    } 
-    else if(!strcmp(command, "addInstrument")) {
-      instrument ins = addInstrument(s);
-      printf("Instrument added!\n");
-      printf("Instrument name: %s\nInstrument price: %d\n", ins.name, ins.price);
-      printf("Command: ");
-      continue;
     }
-    else if(!strcmp(command, "printShop")) {
+    else if (!strcmp(command, "addInstrument"))
+    {
+      int res = addInstrument(s);
+      printf("Instrument added!\n");
+      printf("Instrument name: %s\nInstrument price: %d\n", s->instruments[res]->name, s->instruments[res]->price);
+      printf("Command: ");
+    }
+    else if (!strcmp(command, "printShop"))
+    {
       printShop(s);
       printf("Command: ");
       continue;
     }
-    else {
+    else
+    {
       printf("Thanks for using my creation! :)");
       break;
     }
   }
+  return 0;
 }
 
-struct shop createShop() {
+struct shop createShop()
+{
   struct shop s;
   printf("Shop name: ");
   char name[30];
   fgets(name, 30, stdin);
   s.name = name;
-  for (int i = 0; i < 10; i++) {
-    s.instruments[i] = NULL;
-  }
   return s;
 }
 
-instrument addInstrument(struct shop* s)
+int addInstrument(struct shop *s)
 {
   int i = 0;
-  while(i < 10) {
-    if(s->instruments[i] == NULL)
+  while (i < 10)
+  {
+    if (s->instruments[i] == NULL)
     {
-      struct instrument* ins = createIns();
+      struct instrument *ins = createIns();
       s->instruments[i] = ins;
-      return *ins;
       break;
     }
-    else {
+    else
+    {
       i++;
     }
   }
+  return i;
 }
 
-instrument* createIns() {
+instrument *createIns()
+{
   printf("Instrument name: ");
   char name[30];
   fgets(name, 30, stdin);
@@ -94,12 +100,16 @@ instrument* createIns() {
   return ins;
 }
 
-void printShop(struct shop* s) {
+void printShop(struct shop *s)
+{
   int i = 0;
   printf("%s", s->name);
-  while(s->instruments[i] != NULL)
+  while (i < 10)
   {
-    printf("Instrument name: %s\n", s->instruments[i]->name);
-    i++;
+    if (s->instruments[i] != NULL)
+    {
+      printf("Instrument name: %s\n", s->instruments[i]->name);
+      i++;
+    }
   }
 }
